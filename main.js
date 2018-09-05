@@ -7,10 +7,21 @@ class Block {
         this.data = data;
         this.previousHash = previousHash;
         this.hash = this.calculateHash();
+        this.nonce = 0;
     }
 
     calculateHash() {
-        return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+        return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString();
+    }
+
+    mineBlock(difficulty) {
+        //creating string of zeros of specific length(difficulty + 1 currently)
+        while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")) {
+            this.nonce++;
+            this.hash = this.calculateHash();
+        }
+
+        console.log("Block mined: " + this.hash);
     }
 }
 
@@ -53,8 +64,14 @@ class Blockchain {
 }
 
 let artSevenCoin = new Blockchain();
+
 artSevenCoin.addBlock(new Block(1, "09/04/2018", { amount: 4 }));
 artSevenCoin.addBlock(new Block(1, "09/04/2018", { amount: 7 }));
 
 console.log('Is blockchain valid? ' + artSevenCoin.isChainValid());
+
+artSevenCoin.chain[1].data = { amount: 100};
+
+console.log('Is blockchain still valid? ' + artSevenCoin.isChainValid());
+
 // console.log(JSON.stringify(artSevenCoin, null, 4));
