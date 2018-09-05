@@ -21,7 +21,7 @@ class Blockchain {
     }
 
     createGenesisBlock() {
-        return new Block(0, "09/03/2018", "Genesis block 777", "0");
+        return new Block(0, "09/04/2018", "Genesis 77777777777777777777", "0");
     }
 
     getLatestBlock() {
@@ -33,7 +33,28 @@ class Blockchain {
         newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
+
+    isChainValid() {
+        for( let i = 1; i < this.chain.length; i++) {
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+            //rechecking hash value
+            if (currentBlock.hash != currentBlock.calculateHash()) {
+                return false;
+            }
+            //checking if hash points at previous block hash
+            if(currentBlock.previousHash !== previousBlock.hash) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 let artSevenCoin = new Blockchain();
-artSevenCoin.addBlock(new Block)
+artSevenCoin.addBlock(new Block(1, "09/04/2018", { amount: 4 }));
+artSevenCoin.addBlock(new Block(1, "09/04/2018", { amount: 7 }));
+
+console.log('Is blockchain valid? ' + artSevenCoin.isChainValid());
+// console.log(JSON.stringify(artSevenCoin, null, 4));
